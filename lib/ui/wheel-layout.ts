@@ -16,10 +16,10 @@ export const WHEEL = {
   hub: 102,
   innerEdge: 116,
   /** Boundary between the minor (inner) and major (outer) rings. */
-  split: 204,
+  split: 212,
   outerEdge: 290,
-  innerLabel: 131,
-  outerLabel: 274,
+  innerLabel: 129,
+  outerLabel: 277,
 } as const;
 
 /** Width a node takes along its row: a numbered set node or a small crate dot. */
@@ -28,9 +28,13 @@ const DOT_WIDTH = 9.5;
 /** Each segment spans 30 degrees; nodes keep clear of the edges. */
 const USABLE_ANGLE = (25 * Math.PI) / 180;
 
-const ROWS: Record<"A" | "B", { single: number; double: [number, number] }> = {
-  A: { single: 172, double: [187, 160] },
-  B: { single: 236, double: [249, 224] },
+/**
+ * Row radii to try, fewest rows first. The inner ring is where most house
+ * tracks live (minor keys) and its segments are narrow, so it may use three rows.
+ */
+const ROWS: Record<"A" | "B", number[][]> = {
+  A: [[178], [193, 166], [197, 172, 147]],
+  B: [[241], [254, 230]],
 };
 
 export interface Point {
@@ -113,8 +117,11 @@ export function layoutWheel(tracks: readonly Track[], setIds: readonly string[])
     }));
 
     const total = items.reduce((sum, item) => sum + item.width, 0);
-    const spec = ROWS[key.ring];
-    const radii = total <= spec.single * USABLE_ANGLE ? [spec.single] : spec.double;
+    const options = ROWS[key.ring];
+    const roomIn = (radii: number[]) =>
+      radii.reduce((sum, radius) => sum + radius * USABLE_ANGLE, 0);
+    const radii =
+      options.find((candidate) => total <= roomIn(candidate)) ?? options[options.length - 1];
     const rows = radii.map((radius) => ({
       radius,
       room: radius * USABLE_ANGLE,

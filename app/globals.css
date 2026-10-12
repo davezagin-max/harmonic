@@ -123,6 +123,18 @@ body {
   animation: pop-in 260ms ease-out both;
 }
 
+/* With reduced motion the set simply appears: no drawing, no stagger. */
+@media (prefers-reduced-motion: reduce) {
+  .set-path,
+  .set-node {
+    animation: none !important;
+  }
+
+  .set-path {
+    stroke-dasharray: none;
+  }
+}
+
 /* Range inputs pick up the accent. */
 input[type="range"] {
   accent-color: var(--accent);

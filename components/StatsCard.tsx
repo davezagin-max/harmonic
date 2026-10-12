@@ -91,7 +91,7 @@ function Fact({ label, value, hint }: { label: string; value: string; hint?: str
       <dt className="text-[11px] uppercase tracking-wide text-muted">{label}</dt>
       <dd className="font-mono text-sm">
         {value}
-        {hint && <span className="ml-1 text-xs text-muted">{hint}</span>}
+        {hint && <span className="block text-[11px] text-muted">{hint}</span>}
       </dd>
     </div>
   );
@@ -113,7 +113,7 @@ export function StatsCard({ result, set, ms }: StatsCardProps) {
   return (
     <section
       aria-labelledby="stats-title"
-      className="rounded-lg border border-border bg-surface p-4"
+      className="@container rounded-lg border border-border bg-surface p-4"
     >
       <div className="flex flex-wrap items-end justify-between gap-x-4 gap-y-1">
         <h2 id="stats-title" className="text-sm font-semibold">
@@ -125,12 +125,12 @@ export function StatsCard({ result, set, ms }: StatsCardProps) {
         </p>
       </div>
 
-      <div className="mt-3 grid grid-cols-1 items-center gap-4 min-[420px]:grid-cols-[auto_minmax(0,1fr)]">
+      <div className="mt-3 grid grid-cols-1 items-center gap-4 @lg:grid-cols-[13rem_minmax(0,1fr)]">
         <div>
           <p className="font-mono text-4xl font-bold leading-none tracking-tight text-accent">
             {result.improvementPct.toFixed(0)}%
           </p>
-          <p className="mt-1.5 max-w-[11rem] text-xs leading-snug text-muted">
+          <p className="mt-1.5 text-xs leading-snug text-muted">
             lower cost than the average of {baseline.shuffles} random orders of the same crate
           </p>
           <p className="mt-2 font-mono text-xs">
@@ -142,15 +142,19 @@ export function StatsCard({ result, set, ms }: StatsCardProps) {
         <TraceChart result={result} />
       </div>
 
-      <dl className="mt-4 grid grid-cols-2 gap-x-4 gap-y-3 border-t border-border pt-3 sm:grid-cols-4">
+      <dl className="mt-4 grid grid-cols-2 gap-x-4 gap-y-3 border-t border-border pt-3 @lg:grid-cols-4">
         <Fact
           label="Clean mixes"
           value={`${stats.cleanMixes} of ${stats.mixes}`}
-          hint={`random ${(baseline.cleanShare * 100).toFixed(0)}%`}
+          hint={`random order: ${(baseline.cleanShare * 100).toFixed(0)}%`}
         />
         <Fact label="Key clashes" value={String(stats.keyClashes)} />
         <Fact label="Avg tempo move" value={`${stats.avgTempoPct.toFixed(1)}%`} />
-        <Fact label="Avg arc miss" value={`${stats.avgEnergyMiss.toFixed(1)}`} hint="levels" />
+        <Fact
+          label="Avg arc miss"
+          value={`${stats.avgEnergyMiss.toFixed(1)}`}
+          hint="energy levels"
+        />
       </dl>
 
       <div className="mt-3">

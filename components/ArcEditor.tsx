@@ -147,6 +147,8 @@ export function ArcEditor({
   const canRemove = current !== null && arc.length > 2 && current > 0 && current < arc.length - 1;
   const isDefault = JSON.stringify(arc) === JSON.stringify(DEFAULT_ARC);
   const levelY = (level: number) => 1 - (level - ENERGY_MIN) / (ENERGY_MAX - ENERGY_MIN);
+  // A curve with many points gets smaller handles so they do not hide the tracks behind them.
+  const handleRadius = arc.length <= 10 ? 6.5 : arc.length <= 16 ? 5 : 4;
 
   return (
     <div className="flex flex-col gap-2">
@@ -304,14 +306,19 @@ export function ArcEditor({
                     onCommit(arc);
                   }}
                 >
-                  <circle cx={pct(point.t)} cy={pct(1 - point.e)} r={16} fill="transparent" />
                   <circle
                     cx={pct(point.t)}
                     cy={pct(1 - point.e)}
-                    r={isCurrent ? 8 : 6.5}
+                    r={arc.length <= 10 ? 16 : 11}
+                    fill="transparent"
+                  />
+                  <circle
+                    cx={pct(point.t)}
+                    cy={pct(1 - point.e)}
+                    r={isCurrent ? handleRadius + 1.5 : handleRadius}
                     fill={isCurrent ? "var(--accent)" : "var(--surface)"}
                     stroke="var(--accent)"
-                    strokeWidth={2.5}
+                    strokeWidth={arc.length <= 10 ? 2.5 : 2}
                   />
                 </g>
               );

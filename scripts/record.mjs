@@ -19,7 +19,7 @@ const flag = (name) => {
   return i === -1 ? undefined : process.argv[i + 1];
 };
 const budget = Number(flag("--budget") ?? 2);
-const port = Number(flag("--port") ?? 3111);
+const port = Number(flag("--port") ?? 3170);
 const only = flag("--only");
 
 for (const file of [".env.local", "../.env"]) {

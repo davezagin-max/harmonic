@@ -146,6 +146,9 @@ export function Studio({ initial, demo }: StudioProps) {
     [initial],
   );
   const [plan, setPlan] = useState<Plan>(DEFAULT_PLAN);
+  // The latest plan, for code that resumes after an await (a model reply, a file read) and must
+  // not overwrite something the visitor changed in the meantime.
+  const planRef = useRef<Plan>(DEFAULT_PLAN);
   const [computed, setComputed] = useState<Computed>(defaultComputed);
   const [busy, setBusy] = useState(false);
   const [importError, setImportError] = useState<string | null>(null);
@@ -156,6 +159,8 @@ export function Studio({ initial, demo }: StudioProps) {
   const [arcBusy, setArcBusy] = useState(false);
   const [arcError, setArcError] = useState<ApiFailure | null>(null);
   const [appliedArc, setAppliedArc] = useState<AppliedArc | null>(null);
+  // Bumped on Reset so the description box starts again empty.
+  const [promptVersion, setPromptVersion] = useState(0);
   const arcAbort = useRef<AbortController | null>(null);
 
   const [notesBusy, setNotesBusy] = useState(false);
@@ -192,8 +197,14 @@ export function Studio({ initial, demo }: StudioProps) {
   }, [storedNotes, signature]);
   const notesShown = notes.size > 0 && storedNotes !== null;
 
-  /** Every change to the plan goes through here: it updates the plan and re-runs the search. */
+  /** Changes some fields of the latest plan and re-plans. */
+  function change(patch: Partial<Plan>) {
+    applyPlan({ ...planRef.current, ...patch });
+  }
+
+  /** Every change to the plan ends up here: it updates the plan and re-runs the search. */
   function applyPlan(next: Plan) {
+    planRef.current = next;
     setPlan(next);
     // The set is about to change, so notes being written for the old one are abandoned.
     stopNotes();
@@ -236,8 +247,7 @@ export function Studio({ initial, demo }: StudioProps) {
       return;
     }
     crateCounter.current += 1;
-    applyPlan({
-      ...plan,
+    change({
       crate: {
         uid: crateCounter.current,
         name: file.name.replace(/\.[A-Za-z0-9]+$/, "").slice(0, 60) || "Imported crate",
@@ -282,7 +292,7 @@ export function Studio({ initial, demo }: StudioProps) {
     }
     const targetMin =
       arc.durationMinutes === null
-        ? plan.targetMin
+        ? planRef.current.targetMin
         : Math.min(MAX_TARGET_MIN, Math.max(MIN_TARGET_MIN, arc.durationMinutes));
     setAppliedArc({
       description: body.description,
@@ -290,7 +300,7 @@ export function Studio({ initial, demo }: StudioProps) {
       durationMinutes: arc.durationMinutes === null ? null : targetMin,
       meta: response.meta,
     });
-    applyPlan({ ...plan, arc: arc.points, targetMin });
+    change({ arc: arc.points, targetMin });
   }
 
   async function runNotes() {
@@ -328,6 +338,7 @@ export function Studio({ initial, demo }: StudioProps) {
   }
 
   function resetAll() {
+    setPromptVersion((version) => version + 1);
     setImportError(null);
     setAppliedArc(null);
     setArcError(null);
@@ -356,16 +367,16 @@ export function Studio({ initial, demo }: StudioProps) {
         onImport={handleImport}
         onUseSample={() => {
           setImportError(null);
-          applyPlan({ ...plan, crate: SAMPLE_CRATE });
+          change({ crate: SAMPLE_CRATE });
         }}
         onDownloadSample={() => download("harmonic-sample-crate.csv", SAMPLE_CRATE_CSV, "text/csv")}
         targetMin={plan.targetMin}
-        onTargetMin={(targetMin) => applyPlan({ ...plan, targetMin })}
+        onTargetMin={(targetMin) => change({ targetMin })}
         weights={plan.weights}
-        onWeights={(weights) => applyPlan({ ...plan, weights })}
+        onWeights={(weights) => change({ weights })}
         seed={plan.seed}
         busy={busy}
-        onOptimize={() => applyPlan({ ...plan, seed: plan.seed + 1 })}
+        onOptimize={() => change({ seed: planRef.current.seed + 1 })}
         canReset={!isDefaultPlan(plan)}
         onReset={resetAll}
       />
@@ -408,11 +419,15 @@ export function Studio({ initial, demo }: StudioProps) {
           </div>
           <ArcEditor
             arc={plan.arc}
-            onChange={(arc) => setPlan({ ...plan, arc })}
+            onChange={(arc) => {
+              // Dragging redraws the curve live; the search waits for the drop.
+              planRef.current = { ...planRef.current, arc };
+              setPlan(planRef.current);
+            }}
             onCommit={(arc) => {
               // A hand edit replaces whatever description the curve came from.
               setAppliedArc(null);
-              applyPlan({ ...plan, arc });
+              change({ arc });
             }}
             set={set}
             targetSec={targetSec}
@@ -420,6 +435,7 @@ export function Studio({ initial, demo }: StudioProps) {
             onHover={setHoverId}
           />
           <ArcPrompt
+            key={promptVersion}
             isLive={isLive}
             placeholder={demo.arcPlaceholder}
             busy={arcBusy}
@@ -540,7 +556,7 @@ export function Studio({ initial, demo }: StudioProps) {
                       after failing the fact check
                     </span>
                   )}
-                  <CostMeter meta={storedNotes.meta} />
+                  {!storedNotes.meta.placeholder && <CostMeter meta={storedNotes.meta} />}
                 </p>
               )}
             </div>

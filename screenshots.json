@@ -1,8 +1,69 @@
 {
   "port": 3270,
   "shots": [
-    { "name": "hero", "path": "/", "theme": "dark", "viewport": "desktop", "actions": [{ "wait": 900 }] },
-    { "name": "light", "path": "/", "theme": "light", "viewport": "desktop", "actions": [{ "wait": 900 }] },
-    { "name": "mobile", "path": "/", "theme": "dark", "viewport": "mobile", "actions": [{ "wait": 900 }] }
-  ]
+    {
+      "name": "hero",
+      "path": "/",
+      "theme": "dark",
+      "viewport": "desktop",
+      "actions": [{ "click": "text=Write notes" }, { "waitFor": "ol li p" }, { "wait": 500 }]
+    },
+    {
+      "name": "hover",
+      "path": "/",
+      "theme": "dark",
+      "viewport": "desktop",
+      "actions": [
+        { "click": "text=Write notes" },
+        { "waitFor": "ol li p" },
+        { "hover": "svg[role=img] g.set-node >> nth=8" },
+        { "wait": 500 }
+      ]
+    },
+    {
+      "name": "tailgate",
+      "path": "/",
+      "theme": "dark",
+      "viewport": "desktop",
+      "actions": [{ "click": "text=3-hour tailgate" }, { "waitFor": "text=of 3 h" }, { "wait": 600 }]
+    },
+    {
+      "name": "light",
+      "path": "/",
+      "theme": "light",
+      "viewport": "desktop",
+      "actions": [{ "click": "text=Write notes" }, { "waitFor": "ol li p" }, { "wait": 500 }]
+    },
+    { "name": "mobile", "path": "/", "theme": "dark", "viewport": "mobile", "actions": [{ "wait": 600 }] },
+    {
+      "name": "mobile-arc",
+      "path": "/",
+      "theme": "dark",
+      "viewport": "mobile",
+      "actions": [
+        { "click": "text=Sunset rooftop" },
+        { "waitFor": "text=Set length taken from the description" },
+        { "wait": 600 }
+      ]
+    }
+  ],
+  "gif": {
+    "path": "/",
+    "theme": "dark",
+    "actions": [
+      { "wait": 900 },
+      { "click": "text=3-hour tailgate" },
+      { "wait": 1900 },
+      { "click": "text=Peak-time club slot" },
+      { "wait": 1900 },
+      { "click": "text=Reset" },
+      { "wait": 1200 },
+      { "hover": "svg[role=img] g.set-node >> nth=8" },
+      { "wait": 1100 },
+      { "hover": "svg[role=img] g.set-node >> nth=1" },
+      { "wait": 900 },
+      { "click": "text=Write notes" },
+      { "wait": 1500 }
+    ]
+  }
 }

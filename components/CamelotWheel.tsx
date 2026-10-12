@@ -84,6 +84,8 @@ export function CamelotWheel({
   }
   const fanIds = new Set(fan.map((link) => link.id));
 
+  // The path draws in play order; a long set draws faster so the whole thing takes under a second.
+  const stagger = Math.min(45, 700 / Math.max(1, set.entries.length));
   const dimmed = focusKey !== null;
   const activeEntry = activeTrack
     ? (set.entries.find((entry) => entry.track.id === activeTrack.id) ?? null)
@@ -161,7 +163,7 @@ export function CamelotWheel({
       </g>
 
       {/* The set, as a path */}
-      <g key={setSignature} pointerEvents="none" fill="none" strokeLinecap="round">
+      <g key={setSignature} pointerEvents="none" fill="none">
         {set.entries.map((entry, index) => {
           const next = set.entries[index + 1];
           if (!entry.next || !next) return null;
@@ -180,7 +182,7 @@ export function CamelotWheel({
               stroke={linkColor(entry.next.clean, entry.next.key.relation)}
               strokeWidth={touchesActive ? 3.5 : 2.2}
               opacity={activeTrack && !touchesActive ? 0.25 : 0.9}
-              style={{ animationDelay: `${index * 45}ms` }}
+              style={{ animationDelay: `${index * stagger}ms` }}
             />
           );
         })}
@@ -220,7 +222,7 @@ export function CamelotWheel({
             <g
               key={entry.track.id}
               className="set-node cursor-pointer"
-              style={{ animationDelay: `${index * 45}ms` }}
+              style={{ animationDelay: `${index * stagger}ms` }}
               opacity={faded ? 0.4 : 1}
               onPointerEnter={() => onHover(entry.track.id)}
               onClick={() => onSelect(entry.track.id)}

@@ -109,7 +109,7 @@ export function ArcPrompt({
         )}
       </form>
 
-      <div aria-live="polite" className="mt-2.5 min-h-5 text-sm">
+      <div aria-live="polite" className="text-sm [&>*]:mt-2.5">
         {busy && (
           <p className="flex flex-wrap items-center gap-3 text-muted">
             <span>Planning the arc…</span>
@@ -140,7 +140,7 @@ export function ArcPrompt({
               <span className="rounded-sm border border-border px-1.5 py-0.5">
                 {sourceLabel(applied.meta)}
               </span>
-              <CostMeter meta={applied.meta} />
+              {!applied.meta.placeholder && <CostMeter meta={applied.meta} />}
             </p>
           </div>
         )}
