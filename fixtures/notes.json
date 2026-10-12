@@ -15,77 +15,77 @@
       "notes": [
         {
           "index": 0,
-          "note": "Tempos match and the keys are neighbours: take a long 32-bar blend and swap the bass halfway through.",
+          "note": "Neighbouring keys and almost the same tempo: start it early and take a long, unhurried blend.",
           "source": "model"
         },
         {
           "index": 1,
-          "note": "Same key, same tempo. Layer the percussion in early and let the new groove lift the floor a notch.",
+          "note": "Same key, so layer freely. Bring the new drums in under the melody and let the energy step up.",
           "source": "model"
         },
         {
           "index": 2,
-          "note": "A small nudge on the pitch fader, then a steady blend; bring the new track in over the outgoing drums.",
+          "note": "Two steps up the wheel: do not ride this one. Swap quickly at a phrase change for the lift.",
           "source": "model"
         },
         {
           "index": 3,
-          "note": "No pitch change needed. Hold both for a full phrase, then cut the old bass as the new one lands.",
+          "note": "Tempos match and the keys are neighbours. Blend for a full phrase, then trade the bass lines.",
           "source": "model"
         },
         {
           "index": 4,
-          "note": "Barely a tempo change and the same key: an easy place for a long, lazy blend.",
+          "note": "Same key, same tempo, same energy: the easiest mix of the night. Loop the outro and take your time.",
           "source": "model"
         },
         {
           "index": 5,
-          "note": "Neighbouring keys at matched tempo. Bring it in underneath and open the filter as the energy steps up.",
+          "note": "Relative minor: the notes agree but the mood darkens. A slow blend lets the shift creep in.",
           "source": "model"
         },
         {
           "index": 6,
-          "note": "Same key and nearly the same speed; tease the new hook in early and ride the two together.",
+          "note": "One step round the wheel with a tiny tempo nudge. Mix on the percussion and swap bass at the phrase.",
           "source": "model"
         },
         {
           "index": 7,
-          "note": "Pitch it up a touch before you start, then blend on the drums and swap bass lines at the phrase change.",
+          "note": "Same key, a little quicker. Ease the pitch up before you start so the blend itself stays clean.",
           "source": "model"
         },
         {
           "index": 8,
-          "note": "Tempos are locked and the keys are neighbours. Keep the blend tight and let the new track do the lifting.",
+          "note": "Same key again and another small step up in tempo. Keep the blend short and let the drums carry it.",
           "source": "model"
         },
         {
           "index": 9,
-          "note": "Same key, slightly quicker. Ease the pitch up during a quiet passage so nobody feels the tempo move.",
-          "source": "model"
-        },
-        {
-          "index": 10,
           "note": "Matched in key, tempo and energy: this is the one to loop and layer for as long as you like.",
           "source": "model"
         },
         {
-          "index": 11,
+          "index": 10,
           "note": "Relative major, so the notes agree and the mood brightens. Time the swap for the high point of the set.",
           "source": "model"
         },
         {
+          "index": 11,
+          "note": "Neighbouring keys, same tempo. You are just past the peak, so take a longer blend and let it settle.",
+          "source": "model"
+        },
+        {
           "index": 12,
-          "note": "Neighbouring keys, same tempo. You are coming off the peak, so take a longer blend and let it settle.",
+          "note": "One step back round the wheel and slightly slower. Bring the pitch down gently while both tracks play.",
           "source": "model"
         },
         {
           "index": 13,
-          "note": "Relative minor: the notes agree but the mood darkens. Bring the pitch down a little and blend slowly.",
+          "note": "Same key and a touch slower. Filter the highs out of the old track as the room starts to come down.",
           "source": "model"
         },
         {
           "index": 14,
-          "note": "Same key and a hair slower. A relaxed blend to start bringing the room down for the close.",
+          "note": "Neighbouring keys at matched tempo. A relaxed, even blend to close the set out.",
           "source": "model"
         }
       ]

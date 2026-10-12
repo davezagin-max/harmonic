@@ -25,7 +25,11 @@
       "path": "/",
       "theme": "dark",
       "viewport": "desktop",
-      "actions": [{ "click": "text=3-hour tailgate" }, { "waitFor": "text=of 3 h" }, { "wait": 600 }]
+      "actions": [
+        { "click": "text=3-hour tailgate" },
+        { "waitFor": "text=of 3 h" },
+        { "wait": 600 }
+      ]
     },
     {
       "name": "light",
@@ -34,7 +38,13 @@
       "viewport": "desktop",
       "actions": [{ "click": "text=Write notes" }, { "waitFor": "ol li p" }, { "wait": 500 }]
     },
-    { "name": "mobile", "path": "/", "theme": "dark", "viewport": "mobile", "actions": [{ "wait": 600 }] },
+    {
+      "name": "mobile",
+      "path": "/",
+      "theme": "dark",
+      "viewport": "mobile",
+      "actions": [{ "wait": 600 }]
+    },
     {
       "name": "mobile-arc",
       "path": "/",

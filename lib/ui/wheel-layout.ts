@@ -116,29 +116,41 @@ export function layoutWheel(tracks: readonly Track[], setIds: readonly string[])
       width: positionOf.has(track.id) ? SET_WIDTH : DOT_WIDTH,
     }));
 
-    const total = items.reduce((sum, item) => sum + item.width, 0);
-    const options = ROWS[key.ring];
-    const roomIn = (radii: number[]) =>
-      radii.reduce((sum, radius) => sum + radius * USABLE_ANGLE, 0);
-    const radii =
-      options.find((candidate) => total <= roomIn(candidate)) ?? options[options.length - 1];
-    const rows = radii.map((radius) => ({
-      radius,
-      room: radius * USABLE_ANGLE,
-      items: [] as typeof items,
-    }));
-
-    let dropped = 0;
-    for (const item of items) {
-      const row = rows.reduce((best, candidate) => (candidate.room > best.room ? candidate : best));
-      if (row.room >= item.width || item.position !== null) {
-        row.items.push(item);
-        row.room -= item.width;
-      } else {
-        dropped++;
+    // Try one row, then two, then three (inner ring only): the first arrangement that holds
+    // everything wins. If none does, the last one is used and the leftover dots are counted.
+    const pack = (radii: number[]) => {
+      const rows = radii.map((radius) => ({
+        radius,
+        room: radius * USABLE_ANGLE,
+        items: [] as typeof items,
+      }));
+      let dropped = 0;
+      let squeezed = 0;
+      for (const item of items) {
+        const row = rows.reduce((best, candidate) =>
+          candidate.room > best.room ? candidate : best,
+        );
+        if (row.room >= item.width) {
+          row.items.push(item);
+          row.room -= item.width;
+        } else if (item.position !== null) {
+          // A set track is always drawn, even if it has to crowd its neighbours.
+          row.items.push(item);
+          row.room -= item.width;
+          squeezed++;
+        } else {
+          dropped++;
+        }
       }
+      return { rows, dropped, squeezed };
+    };
+    let packed = pack(ROWS[key.ring][0]);
+    for (const radii of ROWS[key.ring].slice(1)) {
+      if (packed.dropped === 0 && packed.squeezed === 0) break;
+      packed = pack(radii);
     }
-    if (dropped > 0) overflow.set(index, dropped);
+    const { rows } = packed;
+    if (packed.dropped > 0) overflow.set(index, packed.dropped);
 
     const middle = positionAngle(key.n);
     for (const row of rows) {

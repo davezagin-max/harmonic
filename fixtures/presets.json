@@ -26,66 +26,59 @@
       "demoId": "default-set",
       "tracks": [
         {
-          "title": "Red Rock Rhodes",
-          "artist": "Soft Hardware Co.",
-          "key": "12A",
+          "title": "Chairlift Chords",
+          "artist": "Halcyon Depot",
+          "key": "6B",
           "bpm": 120,
           "energy": 4
         },
         {
-          "title": "Velvet Switchback",
-          "artist": "Corduroy Satellite",
-          "key": "11A",
-          "bpm": 120,
+          "title": "Copper Wire Sunset",
+          "artist": "The Velvet Abacus",
+          "key": "7B",
+          "bpm": 121,
           "energy": 4
         },
         {
-          "title": "Second Wind Shuffle",
-          "artist": "Motel Orbit",
-          "key": "11A",
-          "bpm": 120,
-          "energy": 5
-        },
-        {
-          "title": "Sagebrush Stabs",
-          "artist": "Sundial Mechanics",
-          "key": "12A",
-          "bpm": 122,
-          "energy": 5
-        },
-        {
-          "title": "Foothill Frequency",
-          "artist": "Lowlight Ferry",
-          "key": "12A",
-          "bpm": 122,
-          "energy": 6
-        },
-        {
-          "title": "Desert Varnish Dub",
-          "artist": "Analog Picnic",
-          "key": "12A",
-          "bpm": 123,
-          "energy": 6
-        },
-        {
-          "title": "Tram Dock Tempo",
-          "artist": "Glasshouse Union",
-          "key": "11A",
-          "bpm": 123,
-          "energy": 7
-        },
-        {
-          "title": "Gondola Gospel",
-          "artist": "Second Chairlift",
-          "key": "11A",
-          "bpm": 124,
-          "energy": 7
-        },
-        {
-          "title": "Granite Groove Works",
+          "title": "Rooftop Antenna",
           "artist": "Dune Protocol",
-          "key": "10A",
-          "bpm": 126,
+          "key": "7B",
+          "bpm": 122,
+          "energy": 5
+        },
+        {
+          "title": "Aspen Glow (Night Version)",
+          "artist": "Zephyr & Ohm",
+          "key": "9B",
+          "bpm": 122,
+          "energy": 5
+        },
+        {
+          "title": "Canyon Echo Unit",
+          "artist": "Tuesday Pressure",
+          "key": "8B",
+          "bpm": 122,
+          "energy": 6
+        },
+        {
+          "title": "Sunday Shakeout",
+          "artist": "Low Tide Committee",
+          "key": "8B",
+          "bpm": 122,
+          "energy": 6
+        },
+        {
+          "title": "Cooler Full of Claps",
+          "artist": "Rooftop Algebra",
+          "key": "8A",
+          "bpm": 123,
+          "energy": 7
+        },
+        {
+          "title": "Tap the Keg Drum",
+          "artist": "Kilo Vantage",
+          "key": "9A",
+          "bpm": 124,
           "energy": 7
         },
         {
@@ -124,18 +117,25 @@
           "energy": 8
         },
         {
-          "title": "Neon Trail Map",
-          "artist": "Static Heirloom",
-          "key": "8A",
+          "title": "Fourth Quarter Filter",
+          "artist": "Mina Solvang",
+          "key": "7B",
           "bpm": 126,
           "energy": 8
         },
         {
-          "title": "Parking Lot Prophet",
-          "artist": "Wren Castellan",
-          "key": "8A",
-          "bpm": 125,
+          "title": "Crosswind Clav",
+          "artist": "Margo Sable",
+          "key": "7B",
+          "bpm": 124,
           "energy": 7
+        },
+        {
+          "title": "Hi-Hat Hairpin",
+          "artist": "Arlo Tindall",
+          "key": "8B",
+          "bpm": 124,
+          "energy": 6
         }
       ]
     }

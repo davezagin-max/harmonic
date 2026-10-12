@@ -273,6 +273,27 @@ function polish(p: Problem, perm: Int32Array, scratch: Scratch, startCost: numbe
   return cost;
 }
 
+/**
+ * Cooling schedule: hot at the start (bad moves are often accepted, so the
+ * search roams), close to zero at the end (only improvements survive).
+ * `progress` runs from 0 to 1.
+ */
+function temperatureAt(progress: number): number {
+  const left = 1 - progress;
+  return END_TEMPERATURE + (START_TEMPERATURE - END_TEMPERATURE) * left * left * left * left;
+}
+
+/**
+ * Chance of accepting a move that makes the set worse by `x` temperatures.
+ * This is e^-x, the usual annealing rule, written as 1 / (1 + x + x²/2 + x³/6 + x⁴/24).
+ * Math.exp and Math.pow may round differently from one JavaScript engine to
+ * the next; plain arithmetic may not, so a seed gives the same set everywhere:
+ * on the build server, in CI, and in any browser.
+ */
+function acceptance(x: number): number {
+  return 1 / (1 + x * (1 + (x / 2) * (1 + (x / 3) * (1 + x / 4))));
+}
+
 export function optimize(input: OptimizeInput): OptimizeResult {
   const p = buildProblem(input);
   const { n } = p;
@@ -291,10 +312,9 @@ export function optimize(input: OptimizeInput): OptimizeResult {
   const bestPerm = perm.slice();
   const iterations = n < 3 || k < 1 ? 0 : (input.iterations ?? defaultIterations(n));
   const trace = { best: [best], current: [current] };
-  const cooling = END_TEMPERATURE / START_TEMPERATURE;
 
   for (let step = 0; step < iterations; step++) {
-    const temperature = START_TEMPERATURE * Math.pow(cooling, step / Math.max(1, iterations - 1));
+    const temperature = temperatureAt(step / iterations);
     const roll = rng();
     const size = Math.max(1, k);
     // Every move touches the set (the first k positions); the other end may be anywhere in the crate.
@@ -320,7 +340,7 @@ export function optimize(input: OptimizeInput): OptimizeResult {
     if (a !== b) {
       const next = evaluate(p, perm, scratch);
       const delta = next - current;
-      if (delta <= 0 || rng() < Math.exp(-delta / temperature)) {
+      if (delta <= 0 || rng() < acceptance(delta / temperature)) {
         current = next;
         k = scratch.k;
         if (current < best) {

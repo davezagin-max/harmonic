@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { SAMPLE_TRACKS } from "@/lib/crate/sample";
 import { planSet } from "@/lib/crate/set";
@@ -106,6 +107,16 @@ describe("optimize on the sample crate", () => {
     expect(other.cost.total).toBeLessThan(other.baseline.mean * 0.5);
   });
 
+  it("lands in the same neighbourhood from any starting point", () => {
+    // Annealing is a heuristic: seeds differ a little, but none should be far from the others.
+    const costs = [1, 2, 3, 4, 5, 6, 8, 9].map((seed) => optimize({ ...base, seed }).cost.total);
+    for (const cost of costs) {
+      expect(cost).toBeLessThan(result.baseline.mean * 0.2);
+      expect(cost).toBeLessThan(result.baseline.min * 0.35);
+    }
+    expect(Math.max(...costs) - Math.min(...costs)).toBeLessThan(result.baseline.mean * 0.06);
+  });
+
   it("reports a cost breakdown that adds up and matches scoreOrder", () => {
     const { cost } = result;
     expect(cost.key + cost.tempo + cost.energy + cost.fill).toBeCloseTo(cost.total, 9);
@@ -142,6 +153,28 @@ describe("optimize on the sample crate", () => {
     const mean = (values: number[]) =>
       values.reduce((sum, value) => sum + value, 0) / values.length;
     expect(mean(energies.slice(0, half))).toBeGreaterThan(mean(energies.slice(half)) + 1.5);
+  });
+});
+
+describe("reproducibility across JavaScript engines", () => {
+  it("keeps the search to arithmetic every engine rounds the same way", () => {
+    // Math.exp, Math.pow and friends are allowed to differ in the last bit between engines,
+    // which would be enough to send the same seed down a different path in another browser.
+    const files = [
+      "lib/optimizer/optimize.ts",
+      "lib/optimizer/rng.ts",
+      "lib/music/bpm.ts",
+      "lib/music/camelot.ts",
+      "lib/music/energy.ts",
+      "lib/music/transition.ts",
+      "lib/crate/types.ts",
+    ];
+    for (const file of files) {
+      const source = readFileSync(file, "utf8").replace(/\/\*[\s\S]*?\*\/|\/\/.*$/gm, "");
+      expect(source, file).not.toMatch(
+        /Math\.(exp|pow|log|log2|log10|sqrt|sin|cos|tan|hypot|random)\b|\*\*/,
+      );
+    }
   });
 });
 
