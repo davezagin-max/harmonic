@@ -103,6 +103,8 @@ describe("optimize on the sample crate", () => {
 
   it("gives a different search for a different seed, and still beats the baseline", () => {
     const other = optimize({ ...base, seed: 99 });
+    // The baseline describes the crate and the arc, not the search, so re-rolling leaves it alone.
+    expect(other.baseline).toEqual(result.baseline);
     expect(other.trace.current).not.toEqual(result.trace.current);
     expect(other.cost.total).toBeLessThan(other.baseline.mean * 0.5);
   });

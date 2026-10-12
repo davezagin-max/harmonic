@@ -34,6 +34,7 @@ export interface Weights {
 export const DEFAULT_WEIGHTS: Weights = { key: 1, tempo: 1, energy: 1 };
 export const DEFAULT_SEED = 7;
 export const BASELINE_SHUFFLES = 200;
+const BASELINE_SEED = 0x5eed;
 
 /** A miss of this many energy levels costs as much as the worst key clash. */
 const ENERGY_SCALE = 3;
@@ -298,8 +299,9 @@ export function optimize(input: OptimizeInput): OptimizeResult {
   const p = buildProblem(input);
   const { n } = p;
   const shuffles = input.baselineShuffles ?? BASELINE_SHUFFLES;
-  // The baseline uses its own generator so its numbers do not depend on how long the search runs.
-  const baseline = measureBaseline(p, mulberry32(input.seed ^ 0x5eed), shuffles);
+  // The baseline has its own fixed generator: it describes the crate and the arc, so it must not
+  // move when the visitor re-rolls the search seed or the search runs for longer.
+  const baseline = measureBaseline(p, mulberry32(BASELINE_SEED), shuffles);
 
   const rng = mulberry32(input.seed);
   const scratch: Scratch = { k: 0, totalSec: 0 };
