@@ -1,0 +1,94 @@
+{
+  "default-set": {
+    "label": "default-set",
+    "placeholder": true,
+    "recordedAt": null,
+    "model": "claude-opus-5-5",
+    "usage": {
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 0
+    },
+    "costUsd": 0,
+    "data": {
+      "notes": [
+        {
+          "index": 0,
+          "note": "Tempos match and the keys are neighbours: take a long 32-bar blend and swap the bass halfway through.",
+          "source": "model"
+        },
+        {
+          "index": 1,
+          "note": "Same key, same tempo. Layer the percussion in early and let the new groove lift the floor a notch.",
+          "source": "model"
+        },
+        {
+          "index": 2,
+          "note": "A small nudge on the pitch fader, then a steady blend; bring the new track in over the outgoing drums.",
+          "source": "model"
+        },
+        {
+          "index": 3,
+          "note": "No pitch change needed. Hold both for a full phrase, then cut the old bass as the new one lands.",
+          "source": "model"
+        },
+        {
+          "index": 4,
+          "note": "Barely a tempo change and the same key: an easy place for a long, lazy blend.",
+          "source": "model"
+        },
+        {
+          "index": 5,
+          "note": "Neighbouring keys at matched tempo. Bring it in underneath and open the filter as the energy steps up.",
+          "source": "model"
+        },
+        {
+          "index": 6,
+          "note": "Same key and nearly the same speed; tease the new hook in early and ride the two together.",
+          "source": "model"
+        },
+        {
+          "index": 7,
+          "note": "Pitch it up a touch before you start, then blend on the drums and swap bass lines at the phrase change.",
+          "source": "model"
+        },
+        {
+          "index": 8,
+          "note": "Tempos are locked and the keys are neighbours. Keep the blend tight and let the new track do the lifting.",
+          "source": "model"
+        },
+        {
+          "index": 9,
+          "note": "Same key, slightly quicker. Ease the pitch up during a quiet passage so nobody feels the tempo move.",
+          "source": "model"
+        },
+        {
+          "index": 10,
+          "note": "Matched in key, tempo and energy: this is the one to loop and layer for as long as you like.",
+          "source": "model"
+        },
+        {
+          "index": 11,
+          "note": "Relative major, so the notes agree and the mood brightens. Time the swap for the high point of the set.",
+          "source": "model"
+        },
+        {
+          "index": 12,
+          "note": "Neighbouring keys, same tempo. You are coming off the peak, so take a longer blend and let it settle.",
+          "source": "model"
+        },
+        {
+          "index": 13,
+          "note": "Relative minor: the notes agree but the mood darkens. Bring the pitch down a little and blend slowly.",
+          "source": "model"
+        },
+        {
+          "index": 14,
+          "note": "Same key and a hair slower. A relaxed blend to start bringing the room down for the close.",
+          "source": "model"
+        }
+      ]
+    }
+  }
+}

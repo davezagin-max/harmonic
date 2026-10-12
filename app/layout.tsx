@@ -1,16 +1,22 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { KeyProvider } from "@/components/kit/KeyProvider";
-import { THEME_INIT_SCRIPT } from "@/components/kit/ThemeToggle";
 import "./globals.css";
 
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Starter",
-  description: "Portfolio project starter.",
+  title: "Harmonic: DJ set architect",
+  description:
+    "Turn a crate of tracks into a harmonically mixed set that follows a planned energy arc. Camelot wheel, seeded set optimizer, CSV import, and Claude Opus 5.5 for arcs from a description.",
 };
+
+/**
+ * Runs before first paint. Harmonic is a booth tool, so it opens dark unless the
+ * visitor has chosen the light theme before.
+ */
+const THEME_INIT_SCRIPT = `(function(){var t="dark";try{if(localStorage.getItem("theme")==="light")t="light"}catch(e){}document.documentElement.dataset.theme=t})()`;
 
 export const viewport: Viewport = {
   width: "device-width",

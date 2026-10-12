@@ -5,28 +5,51 @@
  * visual identity (and dark mode) by changing the values in these two blocks.
  */
 :root {
-  --bg: #ffffff;
-  --fg: #14161a;
-  --muted: #5c6370;
-  --surface: #f4f5f7;
-  --border: #d9dce1;
-  --accent: #1f5eff;
+  /* Daylight variant: cool greys, the same wheel hues at a darker lightness. */
+  --bg: #f3f4f7;
+  --fg: #14161b;
+  --muted: #586070;
+  --surface: #ffffff;
+  --raised: #eceef2;
+  --border: #d5d9e0;
+  --accent: #0a7d6e;
   --accent-fg: #ffffff;
   --danger: #b3261e;
-  --success: #1a7f37;
+  --success: #15703a;
+  --warn: #8a5a00;
+  /* Camelot wheel colours: one hue per wheel position, set in oklch() by the components. */
+  --key-l: 0.7;
+  --key-c: 0.15;
+  --key-soft-l: 0.93;
+  --key-soft-c: 0.045;
+  --key-lit-l: 0.84;
+  --key-lit-c: 0.1;
+  --key-ink: #14161b;
+  --key-text-l: 0.42;
   color-scheme: light;
 }
 
 [data-theme="dark"] {
-  --bg: #0e1013;
-  --fg: #eceef2;
-  --muted: #9aa2ae;
-  --surface: #171a1f;
-  --border: #2b3038;
-  --accent: #7aa7ff;
-  --accent-fg: #0e1013;
-  --danger: #ff8a80;
-  --success: #56d364;
+  /* Club dark: near-black booth, colour only where the wheel puts it. */
+  --bg: #090a0d;
+  --fg: #eef0f5;
+  --muted: #959cab;
+  --surface: #111318;
+  --raised: #191c23;
+  --border: #272b35;
+  --accent: #35e0c4;
+  --accent-fg: #04110e;
+  --danger: #ff8078;
+  --success: #57d98a;
+  --warn: #ffc24a;
+  --key-l: 0.8;
+  --key-c: 0.15;
+  --key-soft-l: 0.25;
+  --key-soft-c: 0.055;
+  --key-lit-l: 0.42;
+  --key-lit-c: 0.11;
+  --key-ink: #090a0d;
+  --key-text-l: 0.82;
   color-scheme: dark;
 }
 
@@ -37,11 +60,13 @@
   --color-fg: var(--fg);
   --color-muted: var(--muted);
   --color-surface: var(--surface);
+  --color-raised: var(--raised);
   --color-border: var(--border);
   --color-accent: var(--accent);
   --color-accent-fg: var(--accent-fg);
   --color-danger: var(--danger);
   --color-success: var(--success);
+  --color-warn: var(--warn);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
@@ -63,5 +88,94 @@ body {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+}
+
+/* The set path draws itself round the wheel when a new set arrives. */
+@keyframes draw-path {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.set-path {
+  stroke-dasharray: 1;
+  animation: draw-path 420ms ease-out both;
+}
+
+@keyframes pop-in {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.set-node {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: pop-in 260ms ease-out both;
+}
+
+/* Range inputs pick up the accent. */
+input[type="range"] {
+  accent-color: var(--accent);
+}
+
+/* Arc points are focusable SVG groups: show focus on the handle itself. */
+.arc-handle {
+  outline: none;
+}
+
+.arc-handle:focus-visible circle:last-child {
+  stroke: var(--fg);
+  stroke-width: 3.5;
+}
+
+/*
+ * Page layout. One column on a phone (wheel, arc, set list, numbers), two on a
+ * laptop, and a three-panel console on a wide screen so the wheel, the arc and
+ * the set list are all on the first screen.
+ */
+.studio-grid {
+  display: grid;
+  gap: 1rem;
+  align-items: start;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas: "wheel" "arc" "set" "stats";
+}
+
+@media (min-width: 900px) {
+  .studio-grid {
+    grid-template-columns: minmax(0, 11fr) minmax(0, 12fr);
+    grid-template-areas:
+      "wheel arc"
+      "stats set";
+  }
+}
+
+@media (min-width: 1240px) {
+  .studio-grid {
+    grid-template-columns: minmax(0, 20fr) minmax(0, 14fr) minmax(0, 16fr);
+    grid-template-rows: auto 1fr;
+    grid-template-areas:
+      "wheel arc set"
+      "wheel stats set";
+  }
+}
+
+/* On the two wider layouts the set list scrolls inside its panel, like a deck's browser. */
+@media (min-width: 900px) {
+  .set-scroll {
+    max-height: 37rem;
+    overflow-y: auto;
+    padding-right: 0.25rem;
+    scrollbar-width: thin;
   }
 }

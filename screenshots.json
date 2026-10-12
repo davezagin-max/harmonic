@@ -1,35 +1,8 @@
 {
+  "port": 3270,
   "shots": [
-    {
-      "name": "hero",
-      "path": "/",
-      "theme": "light",
-      "viewport": "desktop",
-      "actions": [{ "click": "text=a powder day in the Wasatch" }, { "waitFor": "figure" }]
-    },
-    {
-      "name": "hero-dark",
-      "path": "/",
-      "theme": "dark",
-      "viewport": "desktop",
-      "actions": [{ "click": "text=a powder day in the Wasatch" }, { "waitFor": "figure" }]
-    },
-    {
-      "name": "mobile",
-      "path": "/",
-      "theme": "dark",
-      "viewport": "mobile",
-      "actions": [{ "click": "text=the first drop in a house set" }, { "waitFor": "figure" }]
-    }
-  ],
-  "gif": {
-    "path": "/",
-    "theme": "dark",
-    "actions": [
-      { "wait": 500 },
-      { "click": "text=a powder day in the Wasatch" },
-      { "waitFor": "figure" },
-      { "wait": 1200 }
-    ]
-  }
+    { "name": "hero", "path": "/", "theme": "dark", "viewport": "desktop", "actions": [{ "wait": 900 }] },
+    { "name": "light", "path": "/", "theme": "light", "viewport": "desktop", "actions": [{ "wait": 900 }] },
+    { "name": "mobile", "path": "/", "theme": "dark", "viewport": "mobile", "actions": [{ "wait": 900 }] }
+  ]
 }
