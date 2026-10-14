@@ -1,26 +1,42 @@
 # Harmonic
 
-> Turn a crate of tracks into a harmonically mixed DJ set that follows a planned energy arc.
+> Orders a DJ's tracks so each song blends smoothly into the next and the energy builds the way you plan.
 
 [![CI](https://github.com/davezagin-max/harmonic/actions/workflows/ci.yml/badge.svg)](https://github.com/davezagin-max/harmonic/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![Live demo](https://img.shields.io/badge/demo-live-brightgreen.svg)](https://harmonic.vercel.app)
+[![Live demo: coming soon](https://img.shields.io/badge/live%20demo-coming%20soon-lightgrey.svg)](#run-locally)
 
-![Harmonic: the Camelot wheel with the planned set drawn as a numbered path, the energy arc, and the set list with transition notes](docs/hero.png)
+![Harmonic after its one-click demo: the key wheel with a 32-track set drawn as a numbered path, the energy arc rising to a peak, and the set list](docs/hero.png)
 
-## Try it in 10 seconds
+_Right after the one-click demo: the sentence "3-hour house tailgate, 45-minute warm-up, peak at 1:45" became the energy arc in the middle (in this demo, Claude's answer is a pre-written example), and the optimizer picked 32 of the 80 sample tracks and ordered them round the key wheel on the left so that 30 of the 31 changes blend smoothly._
 
-**[Open the live demo](https://harmonic.vercel.app)**: no key, no sign-up. It opens with an 80-track sample crate already planned into a 90-minute set. Click **3-hour tailgate** and watch the arc redraw and the set re-plan round the wheel, or drag any point on the energy arc. Point at a track on the wheel to see every clean mix out of it.
+## What it does
 
-The optimizer, the wheel, the CSV import, and the exports need no key at all. The two Claude features (an arc from a description, and transition notes) answer their presets from fixtures in demo mode. Add your own Anthropic key in the app to run them live on your own words and your own set.
+- **Plans a DJ set from a pile of tracks.** Give it a crate (a DJ's track list, exported as a CSV from Rekordbox, Serato, Traktor, or Mixed In Key) and a set length. It picks which tracks to play and in what order.
+- **Makes each change sound smooth.** Tracks in matching musical keys and close tempos blend cleanly into each other. The key wheel (DJs call it the Camelot wheel) shows every track by its key, with the chosen set drawn as a numbered path.
+- **Follows the energy you plan.** Drag a curve for how intense the night should get, from calm to peak, or describe it in one sentence and Claude Opus 5.5 turns it into a curve. The set re-plans to follow it, and Claude can add a one-line mixing tip for each change.
+- **Shows its work.** Code computes every number, including a mixing score (penalty points for clashing keys, tempo jumps, and straying from the plan). On the sample, the planned order scores 87% better than random orders of the same tracks.
 
-Demo data in this commit is hand-written sample output; `pnpm record` replaces it with real Claude Opus 5.5 runs.
+## Try it
 
-![A 10-second tour: two arc presets, pointing at tracks on the wheel, and transition notes](docs/demo.gif)
+The live demo is coming soon. This is the one-click path from the first screen: **Watch it plan a 3-hour set**, point at songs on the wheel, start over, then **Write mixing tips**.
+
+![The one-click demo: a description becomes a 3-hour energy arc, the set re-plans round the wheel, pointing at songs shows what each blends into, and mixing tips appear for the opening set](docs/demo.gif)
+
+To run it yourself (details in [Run locally](#run-locally)):
+
+```bash
+pnpm install
+pnpm dev
+```
+
+Then open http://localhost:3170. No key and no sign-up: it opens with 80 made-up sample tracks already planned into a 90-minute set. The optimizer, the wheel, the CSV import, and the exports all run without a key. The two Claude features (an energy arc from a description, and mixing tips) show pre-written examples for their presets, labelled as such in the app; add your own Anthropic API key in the app to run them live on your own words and your own set.
+
+The AI responses in this commit are hand-written examples, not model runs; `pnpm record` replaces them with real Claude Opus 5.5 runs once a key is available.
 
 ## Why it's interesting
 
-- **One search answers "which tracks" and "in what order".** The search state is a single ordering of the whole crate, and the set is the front of that ordering: tracks are taken in order until the target length is filled. Swapping a track near the front with one further back replaces it in the set, so simulated annealing (swap, insert, reverse moves, then a greedy pass) chooses and sequences at once. On the sample crate the optimized set costs 4.4 against 33.3 for the average of 200 random orders (87% lower, and well under the best random order at 20.1), with 15 of 15 mixes clean where a random order manages about 19%. A run takes about 20 ms on a laptop and happens in a Web Worker.
+- **One search answers "which tracks" and "in what order".** The search state is a single ordering of the whole crate, and the set is the front of that ordering: tracks are taken in order until the target length is filled. Swapping a track near the front with one further back replaces it in the set, so simulated annealing (swap, insert, reverse moves, then a greedy pass) chooses and sequences at once. On the sample crate the optimized set scores 4.4 penalty points against 33.3 for the average of 200 random orders (87% lower, and well under the best random order at 20.1), with 15 of 15 mixes clean where a random order manages about 19%. A run takes about 20 ms on a laptop and happens in a Web Worker.
 - **The same seed gives the same set in every JavaScript engine.** `Math.exp` and `Math.pow` are allowed to round differently between engines, which is enough to send a search down a different path. The annealing schedule and acceptance rule use only plain arithmetic, the random numbers come from a seeded generator, and a test fails if an engine-dependent math call creeps into the search. That is what lets the server plan the opening set at build time, so the first paint is already optimized, and lets the demo transition notes be written for exactly that set.
 - **Code computes the facts; the model only phrases.** For transition notes the browser sends raw tracks, the server recomputes every key relation, tempo change, and energy change with the same tested functions the badges use, and Claude is asked only for one line of advice per mix. Each note is then fact-checked: if it quotes a BPM, a percentage, or a key that is not true for that mix, it is thrown away, asked for again once, and otherwise replaced by a rule-based note that is labelled as such.
 
@@ -61,7 +77,7 @@ flowchart LR
 | Feature                                                                                                                                                                                 | Why                                                                                                                                                                                                                                                                                                                                                                                                             |
 | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Arc from words** (`POST /api/arc`): "3-hour house tailgate, 45-minute warm-up, peak at 1:45" becomes 12 to 24 curve points, a one-line summary, and the set length if one was stated. | Turning a loose description into a shape is judgement, which is what the model is good at. Structured output at `low` effort keeps it fast and cheap. The reply is validated before use: values clamped to range, points sorted and de-duplicated, the curve extended to both ends, and one corrective retry on the same conversation if there is no usable curve. Everything after the curve is deterministic. |
-| **Transition notes** (`POST /api/notes`): one short line of mixing advice per mix.                                                                                                      | Advice is language; the numbers are not. The server recomputes the facts of each mix from the raw tracks and gives them to the model as data. A note that states a figure the facts do not support is rejected, and a follow-up on the same append-only conversation asks again for only those mixes. Anything still missing gets a rule-based note, tagged in the UI.                                          |
+| **Mixing tips** (transition notes, `POST /api/notes`): one short line of mixing advice per mix.                                                                                         | Advice is language; the numbers are not. The server recomputes the facts of each mix from the raw tracks and gives them to the model as data. A note that states a figure the facts do not support is rejected, and a follow-up on the same append-only conversation asks again for only those mixes. Anything still missing gets a rule-based note, tagged in the UI.                                          |
 | **What Claude is not asked to do**: pick tracks, order them, score a mix, or compute any number.                                                                                        | Those have exact answers. They are computed by tested code, run without a key, and are the same every time.                                                                                                                                                                                                                                                                                                     |
 
 Both calls go through one helper (`lib/claude.ts`) that always sends adaptive thinking with an explicit effort level, never forces a tool, reads content by block type, and treats a refusal as a normal result that the UI shows plainly. Text from the visitor (the description, and track and artist names from an imported file) is wrapped in tags and the system prompt says it is data, not instructions. Cancelling a request, or changing the set while notes are being written, aborts the call so no further model calls are made on the visitor's key.
@@ -75,7 +91,7 @@ pnpm install
 pnpm dev
 ```
 
-Open http://localhost:3170. It runs in demo mode until you add a key in the UI.
+Open http://localhost:3170 and click **Watch it plan a 3-hour set**. It runs in demo mode until you add a key in the UI.
 
 To try the importer, click **Sample CSV** to download the sample crate and see the simplest layout it reads. It also reads Rekordbox playlist exports (tab-separated, UTF-16), Serato and Traktor-style CSVs, and Mixed In Key exports; keys can be Camelot (`8A`), Open Key (`1m`), or musical (`Am`, `F#m`, `Bb`).
 
@@ -85,7 +101,7 @@ To try the importer, click **Sample CSV** to download the sample crate and see t
 pnpm check   # lint, typecheck, unit tests, production build
 ```
 
-184 tests, none of which need a key or a network:
+185 tests, none of which need a key or a network:
 
 - **Camelot rules**: every notation for all 24 keys, sharps and flats that name the same pitch, the 12-to-1 wrap, the four compatible moves, and clash costs that rise with distance round the wheel.
 - **Tempo and energy**: the ±6% pitch range, half-time and double-time matches (87 against 174), arc interpolation, and the arc validator.
@@ -95,15 +111,15 @@ pnpm check   # lint, typecheck, unit tests, production build
 - **Fixtures**: every fixture passes the same validators as live output, `fixtures/presets.json` matches what the app sends, and placeholder flags are checked against each fixture's own value, so the suite stays green after real runs are recorded.
 - **Smoke test**: the route handlers in demo mode, from an arc preset through a re-planned set to notes, plus the demo-miss, bad-input, and bad-key paths.
 
-The UI was also walked in headless Chromium at 360, 390, 768, 1024, 1280, and 1440 px (no horizontal scroll before or after interacting), in both themes, and through the live path with every `/api` call intercepted. Screens from that pass:
+The UI was also walked in headless Chromium at 360, 390, 768, 1024, 1280, and 1440 px (no horizontal scroll before or after interacting), in both themes, through the live path with every `/api` call intercepted, and through the one-click demo (each narration step, start over, a refused request, and a visitor taking over mid-demo) at every width. Screens from that pass:
 
-| Point at a track: its clean mixes fan out                                                                                | "3-hour tailgate" preset: 32 tracks, clashes in red                                   |
-| ------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------- |
-| ![Hovering a track lights the keys it can move to and draws a link to every track it mixes into cleanly](docs/hover.png) | ![A three-hour set planned to an arc that came from a description](docs/tailgate.png) |
+| Point at a track: its clean mixes fan out                                                                                | Mixing tips for the opening set                                                                          |
+| ------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------- |
+| ![Hovering a track lights the keys it can move to and draws a link to every track it mixes into cleanly](docs/hover.png) | ![The opening 90-minute set with a one-line mixing tip under each change in the set list](docs/tips.png) |
 
-| Light theme                    | Phone, first screen                          | Phone, arc from words                                |
-| ------------------------------ | -------------------------------------------- | ---------------------------------------------------- |
-| ![Light theme](docs/light.png) | ![Phone: toolbar and wheel](docs/mobile.png) | ![Phone: an arc preset applied](docs/mobile-arc.png) |
+| Light theme                    | Phone, first screen                                                     | Phone, after the one-click demo                                                          |
+| ------------------------------ | ----------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| ![Light theme](docs/light.png) | ![Phone: the intro, the primary button, and the wheel](docs/mobile.png) | ![Phone: the demo's narration and the re-planned set on the wheel](docs/mobile-demo.png) |
 
 CI runs the same checks plus a gitleaks secret scan on every push.
 
