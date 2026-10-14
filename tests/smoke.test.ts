@@ -24,6 +24,7 @@ import {
   noteTracks,
 } from "@/lib/defaults";
 import { optimize } from "@/lib/optimizer/optimize";
+import { demoMessage } from "@/components/kit/DemoBanner";
 import { presetHint, sourceLabel } from "@/lib/ui/labels";
 
 let caller = 0;
@@ -132,13 +133,21 @@ describe("main path in demo mode", () => {
 describe("source labels", () => {
   it("never calls hand-written output a model run", () => {
     expect(sourceLabel({ mode: "demo", placeholder: true })).toBe(
-      "Sample output, hand-written (not a model run)",
+      "Pre-written example (not a model run)",
     );
     expect(sourceLabel({ mode: "demo", placeholder: false })).toBe("Recorded Claude Opus 5.5 run");
     expect(sourceLabel({ mode: "live", placeholder: false })).toBe("Live from Claude Opus 5.5");
-    expect(presetHint(false, true)).toContain("hand-written sample output");
+    expect(presetHint(false, true)).toContain("pre-written example");
     expect(presetHint(false, true)).not.toContain("recorded");
     expect(presetHint(false, false)).toContain("recorded Claude Opus 5.5 run");
     expect(presetHint(true, true)).toBe("Live with your key.");
+  });
+
+  it("words the demo banner from the placeholder flag", () => {
+    expect(demoMessage(true)).toBe(
+      "Demo: the AI responses here are pre-written examples. Add your Anthropic API key to run it live.",
+    );
+    expect(demoMessage(false)).toContain("replay recorded Claude Opus 5.5 runs");
+    expect(demoMessage(false)).not.toContain("pre-written");
   });
 });

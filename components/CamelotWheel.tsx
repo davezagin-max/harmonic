@@ -23,8 +23,8 @@ interface CamelotWheelProps {
   activeId: string | null;
   onHover: (id: string | null) => void;
   onSelect: (id: string) => void;
-  /** Lines shown in the centre when nothing is highlighted. */
-  headline: { top: string; middle: string; bottom: string };
+  /** Lines shown in the centre when nothing is highlighted: a context line, a big figure, and what it means. */
+  headline: { top: string; middle: string; bottom: readonly [string, string] };
   /** Changes when the set changes, which replays the path animation. */
   setSignature: string;
 }
@@ -353,7 +353,7 @@ export function CamelotWheel({
           <>
             <text
               x={WHEEL.center}
-              y={WHEEL.center - 34}
+              y={WHEEL.center - 40}
               textAnchor="middle"
               fontSize={13}
               fill="var(--muted)"
@@ -362,7 +362,7 @@ export function CamelotWheel({
             </text>
             <text
               x={WHEEL.center}
-              y={WHEEL.center + 8}
+              y={WHEEL.center + 2}
               textAnchor="middle"
               fontSize={38}
               fontWeight={700}
@@ -373,16 +373,81 @@ export function CamelotWheel({
             </text>
             <text
               x={WHEEL.center}
-              y={WHEEL.center + 36}
+              y={WHEEL.center + 28}
+              textAnchor="middle"
+              fontSize={13.5}
+              fontWeight={600}
+              fill="var(--fg)"
+            >
+              {headline.bottom[0]}
+            </text>
+            <text
+              x={WHEEL.center}
+              y={WHEEL.center + 46}
               textAnchor="middle"
               fontSize={12.5}
               fill="var(--muted)"
             >
-              {headline.bottom}
+              {headline.bottom[1]}
             </text>
           </>
         )}
       </g>
     </svg>
+  );
+}
+
+/** What the marks on the wheel mean, in plain words. */
+export function WheelLegend({ className = "" }: { className?: string }) {
+  return (
+    <ul
+      aria-label="Wheel legend"
+      className={`flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted ${className}`}
+    >
+      <li className="inline-flex items-center gap-1.5">
+        <svg aria-hidden width={16} height={10} viewBox="0 0 16 10">
+          <circle cx={4} cy={5} r={2.6} fill="oklch(var(--key-l) var(--key-c) 210)" />
+          <circle cx={11.5} cy={5} r={2.6} fill="oklch(var(--key-l) var(--key-c) 330)" />
+        </svg>
+        Each dot is a song, placed by its musical key
+      </li>
+      <li className="inline-flex items-center gap-1.5">
+        <svg aria-hidden width={18} height={18} viewBox="0 0 18 18">
+          <circle cx={9} cy={9} r={8} fill="oklch(var(--key-l) var(--key-c) 300)" />
+          <text
+            x={9}
+            y={9}
+            textAnchor="middle"
+            dominantBaseline="central"
+            fontSize={10}
+            fontWeight={700}
+            fill="var(--key-ink)"
+          >
+            1
+          </text>
+        </svg>
+        The numbered path is the set order it chose
+      </li>
+    </ul>
+  );
+}
+
+/** What the colours of the set path mean. */
+export function PathLegend({ className = "" }: { className?: string }) {
+  const items = [
+    { color: "var(--fg)", label: "smooth blend" },
+    { color: "var(--warn)", label: "deliberate key lift" },
+    { color: "var(--danger)", label: "clash" },
+  ];
+  return (
+    <p className={`flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted ${className}`}>
+      <span>Path colours:</span>
+      {items.map((item) => (
+        <span key={item.label} className="inline-flex items-center gap-1.5">
+          <span aria-hidden className="h-0.5 w-4 rounded" style={{ background: item.color }} />
+          {item.label}
+        </span>
+      ))}
+    </p>
   );
 }

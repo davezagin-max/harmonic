@@ -44,7 +44,7 @@ export function ArcPrompt({
   return (
     <div className="mt-4 border-t border-border pt-4">
       <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
-        <h3 className="text-sm font-semibold">Or describe the night</h3>
+        <h3 className="text-sm font-semibold">Or describe the night in words</h3>
         <p className="text-xs text-muted">{presetHint(isLive, placeholder)}</p>
       </div>
 

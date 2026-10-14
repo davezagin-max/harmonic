@@ -331,7 +331,7 @@ export function ArcEditor({
         <p className="flex flex-wrap items-center gap-x-4 gap-y-1">
           <span className="inline-flex items-center gap-1.5">
             <span aria-hidden className="h-0.5 w-5 rounded bg-accent" />
-            Target (drag the points)
+            Plan (drag the points)
           </span>
           <span className="inline-flex items-center gap-1.5">
             <span
@@ -342,7 +342,7 @@ export function ArcEditor({
                   "linear-gradient(90deg, oklch(var(--key-l) var(--key-c) 330), oklch(var(--key-l) var(--key-c) 210))",
               }}
             />
-            Planned tracks, in key colour
+            Tracks in the set, coloured by key
           </span>
         </p>
         <div className="flex gap-1.5">

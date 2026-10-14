@@ -20,27 +20,23 @@ function stillPlaceholder(store: FixtureStore): boolean {
  */
 export default function Home() {
   const initial = defaultRun();
+  const demo = {
+    arcPlaceholder: stillPlaceholder(arcFixtures as FixtureStore),
+    notesPlaceholder: stillPlaceholder(notesFixtures as FixtureStore),
+  };
   return (
     <>
-      <DemoBanner aiRequired={false} />
-      <header className="flex items-center justify-between gap-3 border-b border-border px-3 py-2.5 sm:px-5">
+      <DemoBanner placeholder={demo.arcPlaceholder || demo.notesPlaceholder} />
+      <header className="flex items-center justify-between gap-3 border-b border-border px-3 py-2 sm:px-5">
         <div className="flex min-w-0 items-center gap-2.5">
           <Logo />
           <h1 className="text-base font-semibold tracking-tight">Harmonic</h1>
-          <p className="hidden truncate text-sm text-muted sm:block">
-            Turn a crate into a harmonically mixed set that follows an energy arc.
-          </p>
+          <p className="truncate text-sm text-muted">DJ set planner</p>
         </div>
         <ThemeToggle />
       </header>
       <main id="main" className="flex-1">
-        <Studio
-          initial={initial}
-          demo={{
-            arcPlaceholder: stillPlaceholder(arcFixtures as FixtureStore),
-            notesPlaceholder: stillPlaceholder(notesFixtures as FixtureStore),
-          }}
-        />
+        <Studio initial={initial} demo={demo} />
       </main>
       <footer className="border-t border-border px-4 py-4 text-center text-xs text-muted">
         Built with Claude Code and Claude Opus 5.5.

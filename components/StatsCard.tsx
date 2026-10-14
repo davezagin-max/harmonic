@@ -117,7 +117,7 @@ export function StatsCard({ result, set, ms }: StatsCardProps) {
     >
       <div className="flex flex-wrap items-end justify-between gap-x-4 gap-y-1">
         <h2 id="stats-title" className="text-sm font-semibold">
-          Against a random order
+          Compared with random orders
         </h2>
         <p className="font-mono text-[11px] text-muted">
           seed {result.seed} · {steps} steps
@@ -125,13 +125,19 @@ export function StatsCard({ result, set, ms }: StatsCardProps) {
         </p>
       </div>
 
+      <p className="mt-1.5 text-xs leading-snug text-muted">
+        The mixing score adds up penalty points for clashing keys, big tempo jumps, and straying
+        from the energy arc or the set length. Lower is better. It is a score, not money.
+      </p>
+
       <div className="mt-3 grid grid-cols-1 items-center gap-4 @lg:grid-cols-[13rem_minmax(0,1fr)]">
         <div>
           <p className="font-mono text-4xl font-bold leading-none tracking-tight text-accent">
             {result.improvementPct.toFixed(0)}%
           </p>
           <p className="mt-1.5 text-xs leading-snug text-muted">
-            lower cost than the average of {baseline.shuffles} random orders of the same crate
+            better (lower) mixing score than the average of {baseline.shuffles} random orders of the
+            same tracks
           </p>
           <p className="mt-2 font-mono text-xs">
             {cost.total.toFixed(1)} <span className="text-muted">vs</span>{" "}
@@ -144,14 +150,14 @@ export function StatsCard({ result, set, ms }: StatsCardProps) {
 
       <dl className="mt-4 grid grid-cols-2 gap-x-4 gap-y-3 border-t border-border pt-3 @lg:grid-cols-4">
         <Fact
-          label="Clean mixes"
+          label="Smooth blends"
           value={`${stats.cleanMixes} of ${stats.mixes}`}
           hint={`random order: ${(baseline.cleanShare * 100).toFixed(0)}%`}
         />
         <Fact label="Key clashes" value={String(stats.keyClashes)} />
-        <Fact label="Avg tempo move" value={`${stats.avgTempoPct.toFixed(1)}%`} />
+        <Fact label="Avg tempo change" value={`${stats.avgTempoPct.toFixed(1)}%`} />
         <Fact
-          label="Avg arc miss"
+          label="Avg miss vs arc"
           value={`${stats.avgEnergyMiss.toFixed(1)}`}
           hint="energy levels"
         />
@@ -159,7 +165,7 @@ export function StatsCard({ result, set, ms }: StatsCardProps) {
 
       <div className="mt-3">
         <p className="mb-1 text-[11px] uppercase tracking-wide text-muted">
-          What is left of the cost
+          Where this set&apos;s remaining penalty comes from
         </p>
         <div className="flex h-2 overflow-hidden rounded-sm bg-raised" aria-hidden>
           {PARTS.map((part) => (

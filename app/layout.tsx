@@ -7,7 +7,7 @@ const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Harmonic: DJ set architect",
+  title: "Harmonic: DJ set planner",
   description:
     "Turn a crate of tracks into a harmonically mixed set that follows a planned energy arc. Camelot wheel, seeded set optimizer, CSV import, and Claude Opus 5.5 for arcs from a description.",
 };

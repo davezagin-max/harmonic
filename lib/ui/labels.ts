@@ -11,7 +11,7 @@ interface Source {
 export function sourceLabel(source: Source): string {
   if (source.mode === "live") return "Live from Claude Opus 5.5";
   return source.placeholder
-    ? "Sample output, hand-written (not a model run)"
+    ? "Pre-written example (not a model run)"
     : "Recorded Claude Opus 5.5 run";
 }
 
@@ -19,6 +19,6 @@ export function sourceLabel(source: Source): string {
 export function presetHint(isLive: boolean, placeholder: boolean): string {
   if (isLive) return "Live with your key.";
   return placeholder
-    ? "No key: shows hand-written sample output, not a model run."
+    ? "No key: shows a pre-written example, not a model run."
     : "No key: replays a recorded Claude Opus 5.5 run.";
 }

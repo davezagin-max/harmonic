@@ -151,22 +151,24 @@ input[type="range"] {
 }
 
 /*
- * Page layout. One column on a phone (wheel, arc, set list, numbers), two on a
- * laptop, and a three-panel console on a wide screen so the wheel, the arc and
- * the set list are all on the first screen.
+ * Page layout. One column on a phone (wheel, controls, arc, set list, numbers),
+ * two on a laptop, and a three-panel console on a wide screen so the wheel, the
+ * arc and the set list are all on the first screen.
  */
 .studio-grid {
   display: grid;
   gap: 1rem;
   align-items: start;
   grid-template-columns: minmax(0, 1fr);
-  grid-template-areas: "wheel" "arc" "set" "stats";
+  /* On a phone the wheel comes straight after the intro; the set controls follow it. */
+  grid-template-areas: "wheel" "tools" "arc" "set" "stats";
 }
 
 @media (min-width: 900px) {
   .studio-grid {
     grid-template-columns: minmax(0, 11fr) minmax(0, 12fr);
     grid-template-areas:
+      "tools tools"
       "wheel arc"
       "stats set";
   }
@@ -175,8 +177,10 @@ input[type="range"] {
 @media (min-width: 1240px) {
   .studio-grid {
     grid-template-columns: minmax(0, 20fr) minmax(0, 14fr) minmax(0, 16fr);
-    grid-template-rows: auto 1fr;
+    grid-template-rows: auto auto 1fr;
+    /* The wheel starts right under the intro; the set controls sit above the arc and the list. */
     grid-template-areas:
+      "wheel tools tools"
       "wheel arc set"
       "wheel stats set";
   }

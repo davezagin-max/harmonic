@@ -70,9 +70,12 @@ export function Toolbar(props: ToolbarProps) {
       <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
         <div className="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-2">
           <p className="min-w-0 truncate text-sm">
-            <span className="mr-2 text-[11px] uppercase tracking-wide text-muted">Crate</span>
+            <span className="mr-2 text-[11px] uppercase tracking-wide text-muted">Tracks</span>
             <span className="font-semibold">{props.crateName}</span>
-            <span className="text-muted"> · {props.trackCount} tracks</span>
+            <span className="text-muted">
+              {" "}
+              · {props.trackCount} {props.isSample ? "made-up tracks" : "tracks"}
+            </span>
           </p>
           <div className="flex flex-wrap gap-1.5">
             <input
@@ -176,7 +179,7 @@ export function Toolbar(props: ToolbarProps) {
             onClick={props.onOptimize}
             disabled={props.trackCount < 2}
             title={`Runs the search again from a new random start (seed ${props.seed + 1})`}
-            className="rounded-md bg-accent px-4 py-2 text-sm font-semibold text-accent-fg hover:opacity-90 disabled:opacity-50"
+            className="rounded-md border border-border px-3 py-1.5 text-xs font-medium hover:bg-raised disabled:opacity-50"
           >
             {props.busy ? "Optimizing…" : "Optimize again"}
           </button>
