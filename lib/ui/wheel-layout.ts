@@ -59,10 +59,17 @@ export function positionAngle(n: number): number {
   return (((n % 12) * 30 - 90) * Math.PI) / 180;
 }
 
+/**
+ * Rounded to hundredths: Math.cos and Math.sin may differ in the last digit between
+ * the server and the browser, and the wheel is rendered on both, so unrounded
+ * coordinates would not match when the page hydrates.
+ */
+const hundredths = (value: number) => Math.round(value * 100) / 100;
+
 export function polar(radius: number, angle: number): Point {
   return {
-    x: WHEEL.center + radius * Math.cos(angle),
-    y: WHEEL.center + radius * Math.sin(angle),
+    x: hundredths(WHEEL.center + radius * Math.cos(angle)),
+    y: hundredths(WHEEL.center + radius * Math.sin(angle)),
   };
 }
 
