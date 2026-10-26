@@ -611,7 +611,19 @@ async function wheelAndSetList(ctx, L) {
     return `"Track 1 of ${n}" in the centre`;
   });
 
+  await step(ctx, "Wheel: leaving a set node for empty wheel clears its highlight", "Hover set node 1, then move to the empty top-left corner of the wheel (inside it, not off it); read the centre", async () => {
+    await L.wheel.locator("g.set-node").nth(0).hover();
+    await waitUntil(() => L.wheel.textContent(), (t) => t.includes(`Track 1 of ${n}`), `Track 1 of ${n}`);
+    const box = await L.wheel.boundingBox();
+    expectTrue(box, "no wheel box");
+    await page.mouse.move(box.x + 3, box.y + 3);
+    await waitUntil(() => L.wheel.textContent(), (t) => !t.includes(`Track 1 of ${n}`), "the track highlight to clear", 3000);
+    await page.mouse.move(2, 2);
+    return "centre no longer names track 1 once the pointer is on empty wheel";
+  });
+
   await step(ctx, "Wheel: hovering a track lights the mixes it can make", "Hover set node 1; read the clean-mix count and the fanned links", async () => {
+    await L.wheel.locator("g.set-node").nth(0).hover();
     // The count is its own text element; reading the whole wheel would run it into the code before it.
     const centre = await L.wheel.locator("text", { hasText: /clean mix/ }).first().textContent();
     const match = centre.match(/^(\d+) clean mix(es)? from here$/);
