@@ -205,6 +205,7 @@ export function CamelotWheel({
             strokeWidth={1.5}
             opacity={isActive || reachable ? 1 : activeTrack ? 0.25 : 0.6}
             onPointerEnter={() => onHover(track.id)}
+            onPointerLeave={() => onHover(null)}
             onClick={() => onSelect(track.id)}
             className="cursor-pointer"
           />
@@ -225,6 +226,7 @@ export function CamelotWheel({
               style={{ animationDelay: `${index * stagger}ms` }}
               opacity={faded ? 0.4 : 1}
               onPointerEnter={() => onHover(entry.track.id)}
+              onPointerLeave={() => onHover(null)}
               onClick={() => onSelect(entry.track.id)}
             >
               <circle
