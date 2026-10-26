@@ -294,6 +294,8 @@ export function Studio({ initial, demo }: StudioProps) {
     notesAbort.current?.abort();
     notesAbort.current = null;
     setNotesBusy(false);
+    // An error belongs to the set it was written for; it must not outlive a change to the set.
+    setNotesError(null);
   }
 
   /**
